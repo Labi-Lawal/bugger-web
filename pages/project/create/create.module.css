@@ -1,0 +1,32 @@
+.form {
+    width: 70%;
+    margin: 10vh auto 0;
+    padding: 2%;
+}
+.head {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 5%;
+}
+
+.form .body {
+    width: 50%;
+}
+.title_field_wrapper { 
+    height: var(--input-field-height);
+}
+
+.desc_field_wrapper {
+    height: 200px;
+}
+
+.submit_button_wrapper {
+    width: 100%;
+    height: var(--default-btn-height);
+    margin-left: auto;
+    border-radius: 5px;
+}
+.submit_button_wrapper button {
+    color: white;
+    background: orangered;
+}

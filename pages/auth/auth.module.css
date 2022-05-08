@@ -1,0 +1,54 @@
+.title {
+    font-size: 2.5em;
+    font-weight: 900;
+    letter-spacing: -0.1em;
+    background: -webkit-linear-gradient(top left, var(--orange-100), #ffa400);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    margin: 10vh auto 0;
+    width: 10%;
+}
+.form_frame {
+    width: 25%;
+    margin: 5% auto 0;
+}
+.heading {
+    font-weight: 800;
+    font-size: 1.1em;
+    margin-bottom: 6%;
+    color: var(--grey-heading-text);
+    border-bottom: 3px solid var(--orange-100);
+    padding: 5px 0;
+    white-space: nowrap;
+    width: 20%;
+}
+.input_wrapper {
+    /* width: 70%; */
+    height: var(--input-field-height);
+}
+.forgotpassword {
+    margin-left: auto;
+    width: max-content;
+    margin-bottom: 5%;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--grey-heading-text);
+}
+.signin_btn_wrapper {
+    height: 40px;
+}
+.signin_btn_wrapper button {
+    background: var(--orange-100);
+    color: white;
+}
+.gotosignup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5%;
+    color: var(--grey-text);
+}
+.signup {
+    color: var(--orange-100);
+}

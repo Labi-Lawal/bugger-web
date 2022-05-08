@@ -1,0 +1,18 @@
+.container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    width: max-content;
+}
+.image {
+    border-radius: 50%;
+    object-fit: cover;
+    position: absolute;
+
+}
+.username {
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-left: 5px;
+}
+

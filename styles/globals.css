@@ -1,16 +1,43 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
+:root {
+  /* GREY */
+  --grey-line: rgb(235, 235, 235);
+  --grey-button: rgb(245, 245, 245);
+  --grey-heading-text: rgb(161, 161, 161);
+  --grey-text: rgb(145, 145, 145);
 
-a {
-  color: inherit;
-  text-decoration: none;
+  /* ORANGE */
+  --orange-100: #ff4e42;
+  --orange-900: #ff4f4269;
+  --orange-a-100: #ffa400;
+  --orange-b-100: #f7b955;
+  --orange-icon: #fd665b;
+
+  /* GREEN */
+  --green-indication: rgb(7, 218, 77);
+
+  /* BLACK */
+  --black-heading-text: rgb(40, 40, 40);
+
+  /* BUTTON HEIGHT */
+  --default-btn-height: 40px;
+
+  --project-head-height: 160px;
+
+  --input-field-height: 80px;
 }
 
 * {
-  box-sizing: border-box;
+  font-family: 'Montserrat';
+}
+
+*::selection {
+  background: var(--orange-900);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  overflow: hidden;
 }

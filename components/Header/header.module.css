@@ -1,0 +1,28 @@
+.header {
+    border-bottom: 1px solid var(--grey-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    height: 70px;
+}
+.logo {
+    width: 10%;
+    font-size: 2em;
+    font-weight: 900;
+    letter-spacing: -0.1em;
+    background: -webkit-linear-gradient(top left, var(--orange-100), #ffa400, #f7b955);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.signin_btn_wrapper {
+    width: 10%;
+    height: var(--default-btn-height);
+    margin-left: auto;
+    border-radius: 5px;
+}
+.signin_btn_wrapper button {
+    color: var(--orange-100);
+    background: var(--grey-button);
+}

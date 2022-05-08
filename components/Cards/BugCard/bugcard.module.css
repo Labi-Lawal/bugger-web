@@ -1,0 +1,62 @@
+.container {
+    width: calc(100% - 40px);
+    height: calc(100% - 8%);
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 1rem 0 rgb(200, 200, 200, .1);
+    padding: 4% 20px;
+}
+.top {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+    align-items: center;
+}
+.title {
+    font-weight: 600;
+    color: var(--grey-text);
+}
+.menu {
+    font-size: 120%;
+    color: var(--grey-text);
+}
+.meta_info {
+    font-size: 80%;
+    color: var(--grey-text);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+.user {
+    width: 15px;
+    height: 15px;
+    margin: 0 5px;
+}
+.desc {
+    font-size: 0.85em;
+    margin-top: 15px;
+    color: var(--grey-text);
+}
+.action {
+    display: flex;
+    /* justify-content: space-between; */
+    margin: 15px 0;
+}
+.comments {
+    display: flex;
+}
+.comment_icon {
+    font-size: 120%;
+    color: var(--orange-icon);
+}
+.digit {
+    margin-left: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--grey-text);
+}
+
+.teamlist_wrapper {
+    margin-left: auto;
+    margin-right: 30%;
+}

@@ -1,0 +1,82 @@
+.sidebar {
+    border-right: 1px solid var(--grey-line);
+    width: 100%;
+    height: 100%;
+}
+.logo {
+    height: 70px;
+
+    font-size: 2em;
+    font-weight: 900;
+    letter-spacing: -0.1em;
+    background: -webkit-linear-gradient(top left, var(--orange-100), #ffa400, #f7b955);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navigation {
+    margin-top: 20%;  
+}
+.nav_item {
+    padding-left: 15%;
+    padding-bottom: 5%;
+    color: var(--grey-text);
+}
+.nav_item *::selection {
+    background: none;
+}
+.nav_item .icon {
+    margin: auto 0;
+    font-size: 1.6em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nav_item .label {
+    font-size: 1.1em;
+    text-transform: capitalize;
+    margin-left: 5%;
+    font-weight: 400;
+    color: var(--grey-text);
+}
+.nav_item .nav_item_parent {
+    display: flex;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.nav_item .nav_item_children {
+    border-left: 1px solid var(--grey-line);
+    padding: 0 3%;
+    margin-left: 2%;
+}
+.nav_item_children div {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    font-size: calc(1em - 4px);
+    cursor: pointer;
+}
+
+
+.active_background {
+    box-shadow: inset 0 0 0 2000px rgb(255, 255, 255, .5);
+    backdrop-filter: blur(10px) saturate(100%) contrast(45%) brightness(130%);
+}
+.active_foreground {
+    color: var(--orange-100);
+}
+.active_foreground .label {
+    font-weight: 500;
+    color: var(--orange-100);
+}
+
+.arrow_icon {
+    margin-left: auto;
+    margin-right: 10%; 
+}
