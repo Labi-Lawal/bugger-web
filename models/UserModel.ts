@@ -1,7 +1,9 @@
-import mongoose from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-export default mongoose.model('user', new mongoose.Schema({
+export default models.users || model('users', new Schema({
     email: String,
     password: String,
+    firstname: String,
+    lastname: String,
     dateCreated: { type: Date, default: Date.now }
 }));

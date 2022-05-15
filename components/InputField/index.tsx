@@ -2,13 +2,13 @@ import styles from "./inputfield.module.css";
 
 export default function InputField(props:any) {
     
-    const { label } = props;
+    const { type, label, value, hint, error, onKeyPress } = props;
 
     return(
         <div className={styles.input_field}>
-            <label className={styles.label}>{label}</label>
-            <input className={styles.input} />
-            <div className={styles.error}></div>
+            <label className={styles.label}> {label} </label>
+            <input type={type} className={styles.input} onKeyDown={()=> onKeyPress()} />
+            <div className={styles.error}> {error} </div>
         </div>
     );
 };

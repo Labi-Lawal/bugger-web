@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-export default mongoose.model('task', new mongoose.Schema({
+export default models.tasks || model('tasks', new Schema({
     title: String,
     desc: String,
     team: Array,
