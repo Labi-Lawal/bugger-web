@@ -32,6 +32,7 @@ export default async function SignUp (req:NextApiRequest, res:NextApiResponse) {
                     await generateToken(createdUser)
                     .then((newToken)=> {
                         createdUser.password = undefined;
+                        console.log('New user has been registered');
                         return res.status(200).json({status: 200, message: 'Registration Successful', user: createdUser, token: newToken})
                     })
                     .catch((error)=> {

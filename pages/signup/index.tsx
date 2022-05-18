@@ -3,6 +3,7 @@ import Link from "next/link";
 import TextButton from "../../components/Buttons/TextButton";
 import InputField from "../../components/InputField";
 import styles from "../../styles/auth.module.css";
+import axios from "axios";
 
 export default function SignUp (props:any) {
 
@@ -100,13 +101,41 @@ export default function SignUp (props:any) {
         return true;
     }
 
-    function preventFormDefault(e:any) { return e.preventDefault; }
+    const registerUser = ()=> {
+
+        if(!validateFN(fullnameModel)) {
+            setFNModel({...fullnameModel});
+            return;
+        }
+        if(!validateEmail(emailModel)) {
+            setEmailModel({...emailModel});
+            return;
+        } 
+        if(!validatePassword(passwordModel)) { 
+            setPasswordModel({...passwordModel});
+            return;
+        }
+
+        const payload = {
+            firstname: fullnameModel.value.split(' ')[0],
+            lastname: fullnameModel.value.split(' ')[1],
+            email: emailModel.value,
+            password: passwordModel.value
+        }
+
+        axios.post('/api/v1/users/signup', payload)
+        .then((response)=> {
+            console.log(response.data);
+        })
+        .catch((error)=> console.error(error));
+
+    }
 
     return (
         <section>
             <div className={styles.title}>BUGGER</div>
 
-            <form className={styles.form_frame}>
+            <form className={styles.form_frame} onSubmit={(e)=> e.preventDefault()}>
                 <div className={styles.heading}>Create a new account</div>
 
                 <div className={styles.input_wrapper}>
@@ -141,7 +170,7 @@ export default function SignUp (props:any) {
                 </div>
                  
                 <div className={styles.signin_btn_wrapper}>
-                    <TextButton label="SIGN UP" />
+                    <TextButton label="SIGN UP" onclick={registerUser}/>
                 </div>
 
                 <div className={styles.gotosignup}>
