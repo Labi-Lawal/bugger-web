@@ -1,11 +1,8 @@
 .title {
-    font-size: 2.5em;
+    font-size: 2em;
     font-weight: 900;
-    letter-spacing: -0.1em;
-    background: -webkit-linear-gradient(top left, var(--orange-100), #ffa400);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
+    letter-spacing: -0.05em;
+    color: var(--orange-100);
     margin: 10vh auto 0;
     width: 10%;
 }
@@ -24,7 +21,6 @@
     width: 20%;
 }
 .input_wrapper {
-    /* width: 70%; */
     height: var(--input-field-height);
 }
 .forgotpassword {

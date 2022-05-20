@@ -4,8 +4,9 @@ import TextButton from "../../components/Buttons/TextButton";
 import InputField from "../../components/InputField";
 import styles from "../../styles/auth.module.css";
 import axios from "axios";
+import ErrorModal from "../../components/Modals/ErrorModal";
 
-export default function SignUp (props:any) {
+export default function SignUp (props:any) {    
 
     const [fullnameModel, setFNModel] = useState({ //Fullname is shortened to FN for easy ref
         type:'text',
@@ -30,7 +31,11 @@ export default function SignUp (props:any) {
         error:'',
         label:'Password',
         hint: ''
-    });
+    }),
+    [errorModel, setErrorModel] = useState({
+        message: '',
+        errorOccurred: false
+    });;
     
     const setInput = (inputItem:any, model:any)=> {
         const updated = {...model};
@@ -107,14 +112,7 @@ export default function SignUp (props:any) {
             setFNModel({...fullnameModel});
             return;
         }
-        if(!validateEmail(emailModel)) {
-            setEmailModel({...emailModel});
-            return;
-        } 
-        if(!validatePassword(passwordModel)) { 
-            setPasswordModel({...passwordModel});
-            return;
-        }
+        
 
         const payload = {
             firstname: fullnameModel.value.split(' ')[0],
@@ -124,19 +122,31 @@ export default function SignUp (props:any) {
         }
 
         axios.post('/api/v1/users/signup', payload)
-        .then((response)=> {
-            console.log(response.data);
-        })
-        .catch((error)=> console.error(error));
+        .then((response)=> console.log(response.data))
+        .catch((error)=> {
+            console.error(error.response);
+            setErrorModel({ message: error.response.data.message, errorOccurred: true });
+        });
+    }
 
+    const closeModalFn = ()=> {
+        errorModel.errorOccurred = false;
+        setErrorModel({...errorModel});
     }
 
     return (
+
         <section>
             <div className={styles.title}>BUGGER</div>
-
+            
             <form className={styles.form_frame} onSubmit={(e)=> e.preventDefault()}>
                 <div className={styles.heading}>Create a new account</div>
+
+                {
+                    (errorModel.errorOccurred)
+                    ? <ErrorModal message={errorModel.message} onModalClick={closeModalFn} />
+                    : ''
+                }
 
                 <div className={styles.input_wrapper}>
                     <InputField

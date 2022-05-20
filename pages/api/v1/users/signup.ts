@@ -15,7 +15,7 @@ export default async function SignUp (req:NextApiRequest, res:NextApiResponse) {
         // Check if email has already been registered
         Users.find({ email: email })
         .then((foundEmail:any)=> {
-            if(foundEmail.length !== 0) return res.send({ status: 409, message: 'Email has already been registered' });
+            if(foundEmail.length !== 0) return res.status(409).json({ status: 409, message: 'Email has already been registered' });
 
             // TODO: encrypt password
             const salt = bcrypt.genSaltSync(10);
@@ -27,7 +27,7 @@ export default async function SignUp (req:NextApiRequest, res:NextApiResponse) {
                     firstname: firstname,
                     lastname: lastname
                 }).then(async (createdUser)=> {
-                    if(!createdUser) return res.send({status: 500, message: 'There was an error creating user'});
+                    if(!createdUser) return res.status(500).json({status: 500, message: 'There was a server error creating user'});
 
                     await generateToken(createdUser)
                     .then((newToken)=> {
@@ -42,16 +42,16 @@ export default async function SignUp (req:NextApiRequest, res:NextApiResponse) {
                 })
                 .catch((error)=> {
                     console.log('There was an error creating user');
-                    return res.send({status: 500, message: 'There was an error creating user', error: error});
+                    return res.status(500).json({status: 500, message: 'There was an error creating user', error: error});
                 }) 
             })
             .catch((error)=> {
-                return res.send({status:500, message: 'There was an error encrypting password', error: error});
+                return res.status(500).json({status:500, message: 'There was an error encrypting password', error: error});
             });
 
         })
         .catch((error:any)=> {
-            return res.send({status: 500, message: 'There was a server error', error: error});
+            return res.status(500).json({status: 500, message: 'There was a server error', error: error});
         });
     })
     .catch((validationErr:any)=> res.status(422).send({status: 422, message: validationErr.message}));
