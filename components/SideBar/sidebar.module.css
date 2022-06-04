@@ -19,7 +19,16 @@
 }
 
 .navigation {
-    margin-top: 20%;  
+    margin-top: 5%;  
+}
+.create_project_btn_wrapper {
+    width: 80%;
+    margin: 20% auto 0;
+    height: 40px;
+}
+.create_project_btn_wrapper button {
+    color: grey;
+    background-color: var(--grey-background-faded);
 }
 .nav_item {
     padding-left: 15%;

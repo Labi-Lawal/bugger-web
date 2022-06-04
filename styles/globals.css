@@ -4,6 +4,7 @@
   --grey-button: rgb(245, 245, 245);
   --grey-heading-text: rgb(161, 161, 161);
   --grey-text: rgb(145, 145, 145);
+  --grey-background-faded: rgba(214, 214, 214, 0.377);
 
   /* ORANGE */
   --orange-100: #ff4e42;
@@ -11,6 +12,7 @@
   --orange-a-100: #ffa400;
   --orange-b-100: #f7b955;
   --orange-icon: #fd665b;
+  --orange-background-faded: #ff4f422c;
 
   /* GREEN */
   --green-indication: rgb(7, 218, 77);
@@ -44,4 +46,16 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.logo {
+  font-size: 2em;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--orange-100);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 10%;
 }

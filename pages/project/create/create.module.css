@@ -28,5 +28,5 @@
 }
 .submit_button_wrapper button {
     color: white;
-    background: orangered;
+    background: var(--orange-100);
 }

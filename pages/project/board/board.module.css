@@ -45,6 +45,12 @@
     height: 8px;
     border-radius: 50%;
 }
+.status .completed_icon {
+    color: var(--green-indication);
+
+    width: 10px;
+    height: 10px;
+}
 .status .label {
     margin-left: 5px;
     font-size: 95%;

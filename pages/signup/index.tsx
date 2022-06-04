@@ -1,12 +1,18 @@
+import axios from "axios";
 import { useState } from "react";
+import { useRouter  } from "next/router";
 import Link from "next/link";
 import TextButton from "../../components/Buttons/TextButton";
 import InputField from "../../components/InputField";
 import styles from "../../styles/auth.module.css";
-import axios from "axios";
 import ErrorModal from "../../components/Modals/ErrorModal";
+import { useDispatch } from "react-redux";
+import { storeAuthToken, storeUserData } from "../../Slices/UserSlice";
 
 export default function SignUp (props:any) {    
+
+    const dispatch = useDispatch(),
+    router = useRouter();
 
     const [fullnameModel, setFNModel] = useState({ //Fullname is shortened to FN for easy ref
         type:'text',
@@ -35,7 +41,8 @@ export default function SignUp (props:any) {
     [errorModel, setErrorModel] = useState({
         message: '',
         errorOccurred: false
-    });;
+    }),
+    [isBtnLoading, setIsBtnLoading] = useState(false);
     
     const setInput = (inputItem:any, model:any)=> {
         const updated = {...model};
@@ -112,7 +119,6 @@ export default function SignUp (props:any) {
             setFNModel({...fullnameModel});
             return;
         }
-        
 
         const payload = {
             firstname: fullnameModel.value.split(' ')[0],
@@ -121,9 +127,23 @@ export default function SignUp (props:any) {
             password: passwordModel.value
         }
 
+        setIsBtnLoading(true);
+
         axios.post('/api/v1/users/signup', payload)
-        .then((response)=> console.log(response.data))
+        .then((response)=> { 
+            setIsBtnLoading(false);
+            
+            dispatch(storeAuthToken(response.data.token));
+            dispatch(storeUserData(response.data.user));
+
+            const recentProject = response.data.user.projects.recent;
+
+            if(recentProject) router.push(`/project/board/${recentProject}`);
+            else router.push(`/project/create`);
+
+        })
         .catch((error)=> {
+            setIsBtnLoading(false);
             console.error(error.response);
             setErrorModel({ message: error.response.data.message, errorOccurred: true });
         });
@@ -135,9 +155,8 @@ export default function SignUp (props:any) {
     }
 
     return (
-
         <section>
-            <div className={styles.title}>BUGGER</div>
+            <div className={`${styles.title} logo`}>BUGGER</div>
             
             <form className={styles.form_frame} onSubmit={(e)=> e.preventDefault()}>
                 <div className={styles.heading}>Create a new account</div>
@@ -180,7 +199,7 @@ export default function SignUp (props:any) {
                 </div>
                  
                 <div className={styles.signin_btn_wrapper}>
-                    <TextButton label="SIGN UP" onclick={registerUser}/>
+                    <TextButton label="SIGN UP" loading={isBtnLoading} onclick={registerUser}/>
                 </div>
 
                 <div className={styles.gotosignup}>

@@ -5,5 +5,10 @@ export default models.users || model('users', new Schema({
     password: String,
     firstname: String,
     lastname: String,
+    projects: {
+        created: Array,
+        assigned: Array,
+        recent: { type: String, default: '' }
+    },
     dateCreated: { type: Date, default: Date.now }
 }));

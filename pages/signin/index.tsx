@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import TextButton from "../../components/Buttons/TextButton";
 import InputField from "../../components/InputField";
 import styles from "../../styles/auth.module.css";
 import axios from "axios";
 import ErrorModal from "../../components/Modals/ErrorModal";
+import { storeAuthToken, storeUserData } from "../../Slices/UserSlice";
 
 export default function SignIn (props:any) {
 
@@ -27,7 +30,8 @@ export default function SignIn (props:any) {
     [errorModel, setErrorModel] = useState({
         message: '',
         errorOccurred: false
-    });
+    }),
+    [loadingBtn, setLoadingBtn] = useState(false);
 
     const setInput = (inputItem:any, model:any)=> {
         if(model.name === 'email') {
@@ -64,6 +68,11 @@ export default function SignIn (props:any) {
 
     const preventDefault = (e:any)=> e.preventDefault();
 
+    const dispatch = useDispatch(),
+    router = useRouter();
+
+    const token = useSelector((state:any)=> state.token);
+
     const signUserIn = ()=> {
         if(!validateEmail(emailModel)) {
             setEmailModel({...emailModel});
@@ -79,10 +88,23 @@ export default function SignIn (props:any) {
             password: passwordModel.value
         }
 
+        setLoadingBtn(true);
+
         axios.post('/api/v1/users/signin', payload)
-        .then((response)=> console.log(response.data))
+        .then((response)=> {
+            setLoadingBtn(false); 
+
+            dispatch(storeAuthToken(response.data.token));
+            dispatch(storeUserData(response.data.user));
+
+            const recentProject = response.data.user.projects.recent;
+
+            if(recentProject) router.push(`/project/board/${recentProject}`);
+            else router.push(`/project/create`);
+        })
         .catch((error)=> {
-            console.error(error.response);
+            setLoadingBtn(false);
+            console.error(error);
             setErrorModel({ message: error.response.data.message, errorOccurred: true });
         });
     }
@@ -94,7 +116,7 @@ export default function SignIn (props:any) {
 
     return (
         <section>
-            <div className={styles.title}>BUGGER</div>
+            <div className={`${styles.title} logo`}>BUGGER</div>
 
             <form className={styles.form_frame} onSubmit={preventDefault}>
                 <div className={styles.heading}>Login to your dashboard</div>
@@ -127,7 +149,7 @@ export default function SignIn (props:any) {
                 </div>
                 <div className={styles.forgotpassword}>Forgot Password</div>
                 <div className={styles.signin_btn_wrapper}>
-                    <TextButton label="SIGN IN" onclick={signUserIn} />
+                    <TextButton label="SIGN IN" loading={loadingBtn} onclick={signUserIn} />
                 </div>
 
                 <div className={styles.gotosignup}>
@@ -137,4 +159,8 @@ export default function SignIn (props:any) {
             </form>
         </section>
     );
+}
+
+function fetchAuthToken(): any {
+    throw new Error("Function not implemented.");
 }

@@ -1,12 +1,12 @@
 import styles from "./textfield.module.css";
 
-export default function InputField(props:any) {
-    const { label } = props;
+export default function TextField(props:any) {
+    const { label, hint, error, onKeyPress } = props;
     return(
         <div className={styles.text_field}>
             <label className={styles.label}>{label}</label>
-            <div className={styles.textarea} contentEditable></div>
-            <div className={styles.error}></div>
+            <div className={styles.textarea} contentEditable onKeyUp={ (e:any)=> onKeyPress(e.target.innerText) }></div>
+            <div className={styles.error}> { error } </div>
         </div>
     );
 };
