@@ -61,6 +61,9 @@
     height: 15px;
     margin: 0 5px;
 }
+.assignee {
+    text-transform: capitalize;
+}
 .desc {
     font-size: 0.85em;
     margin-top: 15px;
