@@ -16,11 +16,13 @@ export default function Board (props:any) {
     const router = useRouter();
     const config = { headers: { 'Authorization': `Bearer ${useSelector((state:any) => state.user.token)}` } }
 
-    const [projectData, setProjectData] = useState({
+    const [projectData, setProjectData]:any = useState({
         title: '',
         desc: '',
-        status: ''
+        status: '',
+        team: []
     });
+    const [projectTeamList, setProjectTeamList]:any = useState([]);
     const [sideBarNav, setSideBarNav]:any = useState([]);
 
     const [ createTaskDialog, setDialog ] = useState(false),
@@ -240,6 +242,19 @@ export default function Board (props:any) {
         })
     }
 
+    const getProjectTeamData = (team:any)=> {
+        return new Promise(async ()=> {
+            for await (var teamMem of team) {
+                axios.get(`/api/v1/users/${teamMem}`, config)
+                .then(({data})=> {
+                    projectTeamList.unshift(data.user);
+                    setProjectTeamList([...projectTeamList]);
+                })
+                .catch((error)=> console.error(error))
+            }
+        })
+    }
+
     const deleteTaskFromDB = (taskId:any)=> {
         const payload = { taskId }
         axios.post(`/api/v1/projects/${router.query.projectId}/deletetask`, payload, config)
@@ -261,7 +276,8 @@ export default function Board (props:any) {
             .then(()=> {
                 getProjectDets()
                 .then((project:any)=> {
-                    sortProjectTasks(project.tasks)
+                    getProjectTeamData(project.team);
+                    sortProjectTasks(project.tasks);
                 })
             })
         });
@@ -300,7 +316,7 @@ export default function Board (props:any) {
                     <div className={styles.team_wrapper}>
                         <div className={styles.team_list_heading}>Team</div>
                         <div className={styles.list}>
-                            <TeamList />
+                            <TeamList team={[...projectTeamList]} />
                             <div className={styles.add_team_button_wrapper}>
                                 <TextButton label="Add Team" />
                             </div>

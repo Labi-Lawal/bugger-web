@@ -1,6 +1,9 @@
+.container {
+    display: flex;
+}
 .form {
-    width: 70%;
-    margin: 10vh auto 0;
+    width: 30%;
+    margin: 10vh 0 0 5vw;
     padding: 2%;
 }
 .head {
@@ -10,7 +13,7 @@
 }
 
 .form .body {
-    width: 50%;
+    width: 100%;
 }
 .title_field_wrapper { 
     height: var(--input-field-height);
@@ -19,6 +22,11 @@
 .desc_field_wrapper {
     height: 200px;
 }
+
+.user_search_field_wrapper {
+    height: var(--input-field-height);
+}
+
 
 .submit_button_wrapper {
     width: 100%;
@@ -29,4 +37,52 @@
 .submit_button_wrapper button {
     color: white;
     background: var(--orange-100);
+}
+
+.assignees_section {
+    margin-top: 20vh;
+    margin-left: 10vw;
+    width: 40%;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+.assignees_section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 0 2000px rgba(255, 255, 255, 0.016);
+    backdrop-filter: blur(20px) saturate(100%) contrast(45%) brightness(130%);
+    z-index: -1;
+}
+.heading {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    font-weight: 600;
+    font-size: 120%;
+    border-bottom: 1px solid rgba(211, 211, 211, 0.616);
+}
+.heading .count {
+    background: var(--orange-icon);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-left: 2%;
+    padding: 2px 6px;
+    min-width: 14px;
+    font-size: 0.9em;
+    font-weight: 500;
+} 
+.heading .count::before {
+    content: "";
+    margin-top: 100%;
 }

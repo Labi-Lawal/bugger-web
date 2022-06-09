@@ -1,0 +1,22 @@
+.container {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 5%;
+}
+
+.dp {
+    background: var(--orange-100);
+    color: white;
+    font-weight: 600;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.email {
+    margin-left: 2%;
+}

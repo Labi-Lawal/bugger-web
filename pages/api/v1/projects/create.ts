@@ -7,37 +7,79 @@ export default validateToken(async function Create (req:Request, res:NextApiResp
     if(req.method !== 'POST') return res.status(405).json({status:405, message: 'only POST request allowed'});
     
     await validateInput(req.body)
-    .then(()=> {
-        const { title, desc } = req.body;
+    .then(async ()=> {
+        const { title, desc, team } = req.body;
+        const newTeam:any = [req.user._id];
 
-        ProjectModel.create({
-            title: title.toLowerCase(),
-            desc: desc.toLowerCase()
-        })
-        .then((createdProject)=> {
-            const id = createdProject._id.toString()
-            
-            UserModel.findOneAndUpdate(
-            { email: req.user.email }, 
-            { 
-                $set: { 'projects.recent': id },
-                $push: { 
-                    'projects.created': id,
-                    'projects.assigned': id
+        for (var i=0; i < team.length; i++) {
+            // search for user data and get user ID
+            UserModel.findOne({email: team[i]})
+            .then((foundUser)=> {
+                newTeam.unshift(foundUser.id);
+
+                if(i === team.length) {
+                    ProjectModel.create({
+                        title: title.toLowerCase(),
+                        desc: desc.toLowerCase(),
+                        team: newTeam
+                    })
+                    .then(async (createdProject)=> {
+                        for(var index=0; index < createdProject.team.length; index++) {
+                            const teamMemId = createdProject.team[index],
+                            projectId = createdProject.id.toString();
+
+                            if(teamMemId === req.user._id) {
+                                // save project data in creator profile
+                                UserModel.findOneAndUpdate(
+                                    { _id: teamMemId },
+                                    {  
+                                        $set: { 'projects.recent': projectId },
+                                        $push: { 
+                                            'projects.created': projectId,
+                                            'projects.assigned': projectId
+                                        }
+                                    },
+                                    { new: true }
+                                ).then((updatedUserData)=> {
+                                    console.log('User profile updated with new project data', teamMemId);
+                                    
+                                    if(index === createdProject.team.length) {
+                                        return res.status(200).json({ message: 'New project created successfully', user: updatedUserData })
+                                    }
+                                })
+                            }
+
+                            if(teamMemId != req.user._id) {
+                                // save project data in assignee's profile
+                                UserModel.findOneAndUpdate(
+                                    { _id: teamMemId },
+                                    {  
+                                        $push: { 
+                                            'projects.assigned': projectId
+                                        }
+                                    },
+                                    { new: true }
+                                ).then(()=> {
+                                    console.log('New Project assigned to user', teamMemId);
+                                    
+                                    if(index === createdProject.team.length) {
+                                        UserModel.findOne({_id: req.user._id})
+                                        .then((userData)=> res.status(200).json({ message: 'New project created successfully', user: userData }))
+                                    }
+                                })
+                            }   
+                        }
+                    })
+                    .catch((error)=> {
+                        return res.status(500).json({status:500, message: 'There was an error creating user', error: error});
+                    });           
                 }
-            },
-            {new: true})
-            .then((updatedUser:any) => {
-                return res.status(200).json({ message: 'New project created successfully', user: updatedUser });
             })
-            .catch((error:any) => {
-                console.error('There was an error updating user projects', error);
-                return res.status(500).json({message: "There was a server error, try again"})
+            .catch((error)=> {
+                console.error(error);
+                return res.status(500).json({ message: "There was an error finding user, try again" });
             })
-        })
-        .catch((error)=> {
-            return res.status(500).json({status:500, message: 'There was an error creating user', error: error});
-        });
+        }
     })
     .catch((validationErr:any)=> res.status(422).send({status: 422, message: validationErr.message}));
 });
