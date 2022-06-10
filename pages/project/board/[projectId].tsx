@@ -6,6 +6,7 @@ import { TeamList } from "../../../components/Lists/TeamList";
 import TextButton from "../../../components/Buttons/TextButton";
 import CreateTask from "../../../components/Modals/CreateTask";
 import IconButton from "../../../components/Buttons/IconButton";
+import TeamModal from "../../../components/Modals/TeamModal";
 import { FaCheck, FaPlus } from "react-icons/fa";
 import styles from "./board.module.css";
 import { useRouter } from "next/router";
@@ -24,6 +25,8 @@ export default function Board (props:any) {
     });
     const [projectTeamList, setProjectTeamList]:any = useState([]);
     const [sideBarNav, setSideBarNav]:any = useState([]);
+
+    const [teamModalDialog, setTeamModalDialog] = useState(false);
 
     const [ createTaskDialog, setDialog ] = useState(false),
     toggleCreateTaskDialog = ()=> setDialog(!createTaskDialog),
@@ -318,7 +321,7 @@ export default function Board (props:any) {
                         <div className={styles.list}>
                             <TeamList team={[...projectTeamList]} />
                             <div className={styles.add_team_button_wrapper}>
-                                <TextButton label="Add Team" />
+                                <TextButton label="Add Team" onclick={ ()=> setTeamModalDialog(true) } />
                             </div>
                         </div>
                     </div>
@@ -461,7 +464,8 @@ export default function Board (props:any) {
                 </div>
             </div>
             
-            { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId }a closeModal={ toggleCreateTaskDialog } /> : null }
+            { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId } closeModal={ toggleCreateTaskDialog } /> : null }
+            { (teamModalDialog) ? <TeamModal projectId={router.query.projectId} closeModal={()=> setTeamModalDialog(false) } /> : null }
 
         </section>
     );

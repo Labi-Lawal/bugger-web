@@ -75,7 +75,6 @@ export default function Create(props:any) {
             model.value.push(inputItem);
             model.tempValue = inputItem;
             
-            validateUserSearch(model);
             setUserSearchModel({...model});
             console.log(model);
         }
@@ -124,10 +123,6 @@ export default function Create(props:any) {
             setDescModel({...descModel});
             return;
         }
-        if(!validateUserSearch(userSearchModel)) {
-            setUserSearchModel({...userSearchModel});
-            return;
-        }
 
         const payload = {
             title: titleModel.value,
@@ -136,7 +131,6 @@ export default function Create(props:any) {
         }
 
         setLoadingBtn(true);
-
 
         axios.post('/api/v1/projects/create', payload, {headers: { 'Authorization': `Bearer ${userState.token}`}})
         .then((response)=> {

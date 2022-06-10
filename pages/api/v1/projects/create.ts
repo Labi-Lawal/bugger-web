@@ -69,6 +69,15 @@ export default validateToken(async function Create (req:Request, res:NextApiResp
                                 })
                             }   
                         }
+
+                        if(createdProject.team.length === 0) {
+                            UserModel.findOne({_id: req.user._id})
+                            .then((updatedUser)=> res.status(200).json({ message: 'New project created successfully', user: updatedUser }))
+                            .catch((error)=> {
+                                console.error('There was an error fetching user', error);
+                                return res.status(500).json({status:500, message: 'There was an error fetching user', error: error});
+                            })
+                        }
                     })
                     .catch((error)=> {
                         return res.status(500).json({status:500, message: 'There was an error creating user', error: error});

@@ -1,0 +1,30 @@
+.container {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 10px;
+}
+.heading {
+    border-bottom: 1px solid lightgrey;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    margin: 0 5%;
+    font-size: 1.2em;
+    font-weight: 700;
+}
+.add_team_form {
+    width: 90%;
+    margin: 10% auto 0;
+}
+.user_email_input_wrapper {
+    height: 90px;
+}
+
+.submit_button {
+    height: 60px;
+}
+.submit_button button {
+    background: var(--orange-100);
+    color: white;
+}
