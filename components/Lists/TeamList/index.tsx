@@ -10,16 +10,16 @@ const TeamList = (props:any)=> {
     return (
         <div className={styles.container}>
             {   
-                (team.length > 0)
-                ?   team.map((teamMem:any, count:any)=> {
-                        if(count <= 3) {
-                            return  <div className={styles.userprofile_wrapper}>
-                                        <UserProfile firstname={teamMem.firstname} lastname={teamMem.lastname} />
-                                    </div>
-                        }
-                    })
-                :   
-                (team.length > 3) ? <div className={styles.count}> +3 </div> : ""
+                team.map((teamMem:any, count:any)=> {
+                    if(count <= 3) {
+                        return  <div key={count} className={styles.userprofile_wrapper}>
+                                    <UserProfile firstname={teamMem.firstname} lastname={teamMem.lastname} />
+                                </div>
+                    }
+                    if(count > 3) {
+                        return <div className={styles.count}> +3 </div>
+                    }
+                }) 
             }
         </div>
     );

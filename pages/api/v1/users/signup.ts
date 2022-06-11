@@ -15,7 +15,7 @@ export default async function SignUp (req:NextApiRequest, res:NextApiResponse) {
         // Check if email has already been registered
         Users.find({ email: email })
         .then((foundEmail:any)=> {
-            if(foundEmail.length !== 0) return res.status(409).json({ status: 409, message: 'Email has already been registered' });
+            if(foundEmail.length !== 0) return res.status(409).send({ status: 409, message: 'Email has already been registered' });
 
             // TODO: encrypt password
             const salt = bcrypt.genSaltSync(10);
@@ -27,31 +27,31 @@ export default async function SignUp (req:NextApiRequest, res:NextApiResponse) {
                     firstname: firstname,
                     lastname: lastname
                 }).then(async (createdUser)=> {
-                    if(!createdUser) return res.status(500).json({status: 500, message: 'There was a server error creating user'});
+                    if(!createdUser) return res.status(500).send({status: 500, message: 'There was a server error creating user'});
 
                     await generateToken(createdUser)
                     .then((newToken)=> {
                         createdUser.password = undefined;
                         console.log('New user has been registered');
-                        return res.status(200).json({status: 200, message: 'Registration Successful', user: createdUser, token: newToken})
+                        return res.status(200).send({status: 200, message: 'Registration Successful', user: createdUser, token: newToken})
                     })
                     .catch((error)=> {
                         console.error('There was an error generating token', error);
-                        return res.status(500).json({status: 500, message: 'There was a server error, try again'});
+                        return res.status(500).send({status: 500, message: 'There was a server error, try again'});
                     }); 
                 })
                 .catch((error)=> {
                     console.log('There was an error creating user');
-                    return res.status(500).json({status: 500, message: 'There was an error creating user', error: error});
+                    return res.status(500).send({status: 500, message: 'There was an error creating user', error: error});
                 }) 
             })
             .catch((error)=> {
-                return res.status(500).json({status:500, message: 'There was an error encrypting password', error: error});
+                return res.status(500).send({status:500, message: 'There was an error encrypting password', error: error});
             });
 
         })
         .catch((error:any)=> {
-            return res.status(500).json({status: 500, message: 'There was a server error', error: error});
+            return res.status(500).send({status: 500, message: 'There was a server error', error: error});
         });
     })
     .catch((validationErr:any)=> res.status(422).send({status: 422, message: validationErr.message}));

@@ -21,11 +21,11 @@ export default async function SignIn(req:NextApiRequest, res:NextApiResponse) {
             await generateToken(foundUser)
             .then((newToken)=> {
                 foundUser.password = undefined;
-                return res.status(200).json({status: 200, message: 'Authentication Successful', user: foundUser, token: newToken})
+                return res.status(200).send({status: 200, message: 'Authentication Successful', user: foundUser, token: newToken})
             })
             .catch((error)=> {
                 console.error('There was an error generating token', error);
-                return res.status(500).json({status: 500, message: 'There was a server error, try again'});
+                return res.status(500).send({status: 500, message: 'There was a server error, try again'});
             });
         })
         .catch((error)=> {

@@ -44,9 +44,6 @@ export default function AddTeamModal(props:any) {
             model.error = 'Field cannot be empty';
             return false;
         }
-        // if(!userExists(model.value)) {
-        //     model.error = 'User doesn\'t exist'
-        // }
 
         model.error = '';
         return true;
@@ -57,14 +54,16 @@ export default function AddTeamModal(props:any) {
             newTeamMem: memEmailModel.value
         }
 
-        console.log(config);
-
         axios.post(`/api/v1/projects/${projectId}/updateteam`, payload, config)
         .then(({data})=> {
             console.log(data);
             props.addMemToTeam(data.projects);
         })
-        .catch((error)=> console.error(error.response));
+        .catch((error)=> {
+            if(error.response.status === 404) {
+                memEmailModel.error = error.response.data.message;
+            }
+        });
     }
 
     return (

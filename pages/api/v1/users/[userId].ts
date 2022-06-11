@@ -9,12 +9,12 @@ export default validateToken((req:Request, res: NextApiResponse)=> {
 
     UserModel.findOne({_id: (req.query.userId === 'me') ? req.user._id : req.query.userId})
     .then((foundUser)=> {
-        if(!foundUser) return res.status(405).json({ message: 'User doesn\'t exist'});
+        if(!foundUser) return res.status(405).send({ message: 'User doesn\'t exist'});
 
-        return res.status(200).json({ user: foundUser });
+        return res.status(200).send({ user: foundUser });
     })
     .catch((error)=> {
         console.error(error);
-        return res.status(500).json({ message: "There was a server error find user, please try again." })
+        return res.status(500).send({ message: "There was a server error find user, please try again." })
     });
 });

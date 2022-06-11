@@ -14,7 +14,6 @@ export const userSlice = createSlice({
         },
         storeUserData: (state, action)=> { 
             state.userData = action.payload 
-            console.log(state.userData);
         }, 
         clearUserData: (state)=> { state.userData = {} },
         fetchAuthToken: (state) => { state.token }

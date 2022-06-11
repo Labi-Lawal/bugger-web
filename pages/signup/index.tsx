@@ -144,7 +144,6 @@ export default function SignUp (props:any) {
         })
         .catch((error)=> {
             setIsBtnLoading(false);
-            console.error(error.response);
             setErrorModel({ message: error.response.data.message, errorOccurred: true });
         });
     }

@@ -319,7 +319,7 @@ export default function Board (props:any) {
                     <div className={styles.team_wrapper}>
                         <div className={styles.team_list_heading}>Team</div>
                         <div className={styles.list}>
-                            <TeamList team={[...projectTeamList]} />
+                            <TeamList team={[...projectTeamList].reverse()} />
                             <div className={styles.add_team_button_wrapper}>
                                 <TextButton label="Add Team" onclick={ ()=> setTeamModalDialog(true) } />
                             </div>
@@ -465,7 +465,7 @@ export default function Board (props:any) {
             </div>
             
             { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId } closeModal={ toggleCreateTaskDialog } /> : null }
-            { (teamModalDialog) ? <TeamModal projectId={router.query.projectId} closeModal={()=> setTeamModalDialog(false) } /> : null }
+            { (teamModalDialog) ? <TeamModal projectId={ router.query.projectId } closeModal={()=> setTeamModalDialog(false) } /> : null }
 
         </section>
     );

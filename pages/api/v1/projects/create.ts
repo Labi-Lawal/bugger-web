@@ -4,7 +4,7 @@ import { validateToken } from "../../../../middlewares/jwt";
 import Request from "../../../../utils/Request"
 
 export default validateToken(async function Create (req:Request, res:NextApiResponse) {
-    if(req.method !== 'POST') return res.status(405).json({status:405, message: 'only POST request allowed'});
+    if(req.method !== 'POST') return res.status(405).send({status:405, message: 'only POST request allowed'});
     
     await validateInput(req.body)
     .then(async ()=> {
@@ -15,7 +15,7 @@ export default validateToken(async function Create (req:Request, res:NextApiResp
             // search for user data and get user ID
             UserModel.findOne({email: team[i]})
             .then((foundUser)=> {
-                newTeam.unshift(foundUser.id);
+                newTeam.push(foundUser.id);
 
                 if(i === team.length) {
                     ProjectModel.create({
@@ -44,7 +44,7 @@ export default validateToken(async function Create (req:Request, res:NextApiResp
                                     console.log('User profile updated with new project data', teamMemId);
                                     
                                     if(index === createdProject.team.length) {
-                                        return res.status(200).json({ message: 'New project created successfully', user: updatedUserData })
+                                        return res.status(200).send({ message: 'New project created successfully', user: updatedUserData })
                                     }
                                 })
                             }
@@ -64,7 +64,7 @@ export default validateToken(async function Create (req:Request, res:NextApiResp
                                     
                                     if(index === createdProject.team.length) {
                                         UserModel.findOne({_id: req.user._id})
-                                        .then((userData)=> res.status(200).json({ message: 'New project created successfully', user: userData }))
+                                        .then((userData)=> res.status(200).send({ message: 'New project created successfully', user: userData }))
                                     }
                                 })
                             }   
@@ -72,21 +72,21 @@ export default validateToken(async function Create (req:Request, res:NextApiResp
 
                         if(createdProject.team.length === 0) {
                             UserModel.findOne({_id: req.user._id})
-                            .then((updatedUser)=> res.status(200).json({ message: 'New project created successfully', user: updatedUser }))
+                            .then((updatedUser)=> res.status(200).send({ message: 'New project created successfully', user: updatedUser }))
                             .catch((error)=> {
                                 console.error('There was an error fetching user', error);
-                                return res.status(500).json({status:500, message: 'There was an error fetching user', error: error});
+                                return res.status(500).send({status:500, message: 'There was an error fetching user', error: error});
                             })
                         }
                     })
                     .catch((error)=> {
-                        return res.status(500).json({status:500, message: 'There was an error creating user', error: error});
+                        return res.status(500).send({status:500, message: 'There was an error creating user', error: error});
                     });           
                 }
             })
             .catch((error)=> {
                 console.error(error);
-                return res.status(500).json({ message: "There was an error finding user, try again" });
+                return res.status(500).send({ message: "There was an error finding user, try again" });
             })
         }
     })
