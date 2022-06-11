@@ -3,22 +3,20 @@ import UserProfile from "../../UserProfile";
 import styles from "./teamlist.module.css";
 
 const TeamList = (props:any)=> {
-    const { team } = props;
 
-    console.log(team);
+    const { team } = props;
 
     return (
         <div className={styles.container}>
             {   
                 team.map((teamMem:any, count:any)=> {
-                    if(count <= 3) {
-                        return  <div key={count} className={styles.userprofile_wrapper}>
+                    const excessMem = team.length - 3;
+
+                    return  (count <= 3) 
+                            ?   <div key={count} className={styles.userprofile_wrapper}>
                                     <UserProfile firstname={teamMem.firstname} lastname={teamMem.lastname} />
                                 </div>
-                    }
-                    if(count > 3) {
-                        return <div className={styles.count}> +3 </div>
-                    }
+                            : <div className={styles.count}> +{ excessMem } </div>
                 }) 
             }
         </div>

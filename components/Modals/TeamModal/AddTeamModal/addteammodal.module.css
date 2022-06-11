@@ -23,6 +23,7 @@
 
 .submit_button {
     height: 60px;
+    margin-top: 5%;
 }
 .submit_button button {
     background: var(--orange-100);

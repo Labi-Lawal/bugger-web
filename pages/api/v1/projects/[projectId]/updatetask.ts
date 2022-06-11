@@ -14,10 +14,10 @@ export default validateToken(function UpdateTask(req:Request, res:NextApiRespons
         { new: true }
     )
     .then((updatedProject)=> {
-        console.log(updatedProject);
         return res.status(200).send({ message: "New Task successfully added", project: updatedProject });
     })
     .catch((error)=> {
         console.error('There was an error updating project task', error);
+        return res.status(500).send({ message: 'There was a server error, try again', error: error });
     });
 })

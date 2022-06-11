@@ -22,6 +22,7 @@ export default function AddTeamModal(props:any) {
         value: '',
         error: '',
     });
+    const [isBtnloading, setisBtnloading] = useState(false);
 
     const setInput = (inputValue:any, model:any)=> {
         if(model.name === 'member-email') {
@@ -50,20 +51,34 @@ export default function AddTeamModal(props:any) {
     }
 
     const addMember = ()=> {
-        const payload = {
-            newTeamMem: memEmailModel.value
+        if(validateMemEmailModel(memEmailModel)) {
+            const payload = {
+                newTeamMem: memEmailModel.value
+            }
+
+            setisBtnloading(true);
+
+            axios.post(`/api/v1/projects/${projectId}/updateteam`, payload, config)
+            .then(({data})=> {
+                props.addMemToTeam(data.projects);
+                setisBtnloading(false);
+                
+            })
+            .catch((error)=> {
+                setisBtnloading(false);
+
+                if(error.response.status === 404) {
+                    memEmailModel.error = error.response.data.message;
+                }
+                if(error.response.status === 409) {
+                    memEmailModel.error = error.response.data.message;
+                }
+            
+                setMemEmailModel({...memEmailModel});
+            });
         }
 
-        axios.post(`/api/v1/projects/${projectId}/updateteam`, payload, config)
-        .then(({data})=> {
-            console.log(data);
-            props.addMemToTeam(data.projects);
-        })
-        .catch((error)=> {
-            if(error.response.status === 404) {
-                memEmailModel.error = error.response.data.message;
-            }
-        });
+        setMemEmailModel({...memEmailModel});
     }
 
     return (
@@ -80,9 +95,9 @@ export default function AddTeamModal(props:any) {
                     />
                 </div>
                 <div className={styles.submit_button}>
-                    <TextButton label="Add Member" onclick={ ()=> addMember() } />
+                    <TextButton label="Add Member" loading={isBtnloading} onclick={ ()=> addMember() } />
                 </div>
             </div>
         </div>
     );
-} 
+}   
