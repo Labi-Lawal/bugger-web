@@ -23,16 +23,19 @@ export default function SideBar (props:any) {
             <nav className={styles.navigation}>
                 {   allNavs.map((navItem:any, count:any)=> {
                         return  <div 
-                                    className={`${styles.nav_item} ${(navItem.isActive)? `${styles.active_background}` : null}` }
+                                    className={`${styles.nav_item} ${ (navItem.isActive)? `${styles.active_background}` : null}` }
                                     key={count}
-                                    onClick={()=> router.push(`${navItem.id}`)}
                                 > 
-                                    <div 
-                                        className={`${styles.nav_item_parent} ${(navItem.isActive)? `${styles.active_foreground}` : null}`}
-                                    >
-                                        <FaFolder className={styles.icon} /> 
-                                        <div className={styles.label}> { navItem.label } </div>
-                                    </div>
+                                    {/* <Link href={`${navItem.id}`}> */}
+                                        <a href={`${navItem.id}`}>
+                                            <div
+                                                className={`${styles.nav_item_parent} ${ (navItem.isActive)? `${styles.active_foreground}` : null}` }
+                                            >
+                                                <FaFolder className={styles.icon} /> 
+                                                <div className={styles.label}> { navItem.label } </div>
+                                            </div>
+                                        </a>
+                                    {/* </Link> */}
                                 </div>
                     })
                 }
