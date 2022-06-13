@@ -8,6 +8,7 @@ import CreateTask from "../../../components/Modals/CreateTask";
 import IconButton from "../../../components/Buttons/IconButton";
 import TeamModal from "../../../components/Modals/TeamModal";
 import { FaCheck, FaPlus } from "react-icons/fa";
+import { MdOutlinePersonAddAlt } from "react-icons/md";
 import styles from "./board.module.css";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -320,8 +321,14 @@ export default function Board (props:any) {
                         <div className={styles.team_list_heading}>Team</div>
                         <div className={styles.list}>
                             <TeamList team={[...projectTeamList].reverse()} />
-                            <div className={styles.add_team_button_wrapper}>
-                                <TextButton label="Add Team" onclick={ ()=> setTeamModalDialog(true) } />
+                            
+                            <div className={styles.team_action_wrapper}>
+                                <div className={styles.add_team_button_wrapper}>
+                                    <IconButton icon={MdOutlinePersonAddAlt} onclick={ ()=> setTeamModalDialog(true) } />
+                                </div>
+                                <div className={styles.add_team_button_wrapper}>
+                                    <IconButton icon={FaPlus} onclick={ ()=> setTeamModalDialog(true) } />
+                                </div>
                             </div>
                         </div>
                     </div>

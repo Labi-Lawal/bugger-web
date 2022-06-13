@@ -10,7 +10,6 @@ export default function SideBar (props:any) {
     const router = useRouter();
 
     const { currentNavPosition, allNavs } = props;
-    const [navList, setNavList]:any = useState([]);
 
     return (
         <div className={styles.sidebar}>
