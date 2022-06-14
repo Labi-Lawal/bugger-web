@@ -9,21 +9,27 @@ export default validateToken(async function Create (req:Request, res:NextApiResp
     await validateInput(req.body)
     .then(async ()=> {
         const { title, desc, team } = req.body;
-        const newTeam:any = [req.user._id];
+        const newTeam:any = [];
+        var teamMod = [req.user.email, ...team];
 
-        for (var i=0; i < team.length; i++) {
+        console.log(teamMod);
+
+        for (var i=0; i < teamMod.length; i++) {
             // search for user data and get user ID
-            UserModel.findOne({email: team[i]})
+            UserModel.findOne({email: teamMod[i]})
             .then((foundUser)=> {
                 newTeam.push(foundUser.id);
 
-                if(i === team.length) {
+                if(i === teamMod.length) {
                     ProjectModel.create({
                         title: title.toLowerCase(),
                         desc: desc.toLowerCase(),
-                        team: newTeam
+                        team: newTeam,
+                        createdBy: req.user._id.toString()
                     })
                     .then(async (createdProject)=> {
+                        console.log(createdProject)
+
                         for(var index=0; index < createdProject.team.length; index++) {
                             const teamMemId = createdProject.team[index],
                             projectId = createdProject.id.toString();

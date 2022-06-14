@@ -1,0 +1,21 @@
+.container {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 10px;
+}
+.heading {
+    border-bottom: 1px solid lightgrey;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    margin: 0 5%;
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.member {
+    width: 90%;
+    margin: 0 auto;
+    padding: 5px 0;
+}

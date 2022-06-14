@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { FaCheckCircle, FaTimes } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import TextButton from "../../../Buttons/TextButton";
 import InputField from "../../../InputField";
@@ -7,7 +8,7 @@ import styles from "./addteammodal.module.css";
 
 export default function AddTeamModal(props:any) {
     
-    const { projectId } = props;
+    const { projectId, onSuccess } = props;
 
     const config = {
         headers: {
@@ -23,6 +24,9 @@ export default function AddTeamModal(props:any) {
         error: '',
     });
     const [isBtnloading, setisBtnloading] = useState(false);
+    const [isMemberSubmitted, setIsMemberSubmitted] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isError, setIsError] = useState(false);
 
     const setInput = (inputValue:any, model:any)=> {
         if(model.name === 'member-email') {
@@ -60,12 +64,18 @@ export default function AddTeamModal(props:any) {
 
             axios.post(`/api/v1/projects/${projectId}/updateteam`, payload, config)
             .then(({data})=> {
-                props.addMemToTeam(data.projects);
+                // props.addMemToTeam(data.projects);
                 setisBtnloading(false);
                 
+                setIsMemberSubmitted(true);
+
+                setIsError(false);
+                setIsSuccess(true);
             })
             .catch((error)=> {
                 setisBtnloading(false);
+
+                console.log(error);
 
                 if(error.response.status === 404) {
                     memEmailModel.error = error.response.data.message;
@@ -75,6 +85,9 @@ export default function AddTeamModal(props:any) {
                 }
             
                 setMemEmailModel({...memEmailModel});
+
+                setIsSuccess(false);
+                setIsError(true);
             });
         }
 
@@ -83,21 +96,35 @@ export default function AddTeamModal(props:any) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.heading}>Add New Team Member</div>
-            <div className={styles.add_team_form}>
-                <div className={styles.user_email_input_wrapper}>
-                    <InputField 
-                        label={memEmailModel.label}
-                        hint={memEmailModel.hint}
-                        value={memEmailModel.value}
-                        error={memEmailModel.error}
-                        onKeyPress={(inputValue:any)=> setInput(inputValue, memEmailModel)}
-                    />
-                </div>
-                <div className={styles.submit_button}>
-                    <TextButton label="Add Member" loading={isBtnloading} onclick={ ()=> addMember() } />
-                </div>
-            </div>
+            {
+                (isMemberSubmitted) 
+                ?   (isSuccess)  ?  <div className={styles.success_dialog}>
+                                <div className={styles.heading}> <FaTimes className={styles.close_icon} onClick={()=> setIsMemberSubmitted(false)} /> </div>
+                                <div className={styles.icon}> <FaCheckCircle /> </div>
+                                <div className={styles.success_msg}>
+                                    New member has been added to team successfully.
+                                </div>
+                            </div>
+                        :   null
+                :   <div>
+                        <div className={styles.heading}>Add New Team Member</div>
+                        <div className={styles.add_team_form}>
+                            <div className={styles.user_email_input_wrapper}>
+                                <InputField 
+                                    label={memEmailModel.label}
+                                    hint={memEmailModel.hint}
+                                    value={memEmailModel.value}
+                                    error={memEmailModel.error}
+                                    onKeyPress={(inputValue:any)=> setInput(inputValue, memEmailModel)}
+                                />
+                            </div>
+                            <div className={styles.submit_button}>
+                                <TextButton label="Add Member" loading={isBtnloading} onclick={ ()=> addMember() } />
+                            </div>
+                        </div>
+                    </div>
+            }
+
         </div>
     );
 }   

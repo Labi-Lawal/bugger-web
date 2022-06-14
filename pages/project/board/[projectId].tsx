@@ -8,7 +8,8 @@ import CreateTask from "../../../components/Modals/CreateTask";
 import IconButton from "../../../components/Buttons/IconButton";
 import TeamModal from "../../../components/Modals/TeamModal";
 import { FaCheck, FaPlus } from "react-icons/fa";
-import { MdOutlinePersonAddAlt } from "react-icons/md";
+import { AiOutlineUsergroupAdd } from "react-icons/ai"
+import { CgMenu } from "react-icons/cg"
 import styles from "./board.module.css";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -22,12 +23,15 @@ export default function Board (props:any) {
         title: '',
         desc: '',
         status: '',
-        team: []
+        team: [],
+        createdBy: ''
     });
     const [projectTeamList, setProjectTeamList]:any = useState([]);
     const [sideBarNav, setSideBarNav]:any = useState([]);
 
     const [teamModalDialog, setTeamModalDialog] = useState(false);
+    const [teamListDialog, setTeamListDialog] = useState(false);
+    const [addToTeamDialog, setAddToTeamDialog] = useState(false);
 
     const [ createTaskDialog, setDialog ] = useState(false),
     toggleCreateTaskDialog = ()=> setDialog(!createTaskDialog),
@@ -42,6 +46,25 @@ export default function Board (props:any) {
     [tasksCompleted, setCompleted] = useState([]),
     [taskItem, setTaskItem] = useState<any>({}),
     [taskItemMeta, setTaskItemMeta] = useState({ status:'', id:'' });
+
+    const setNewProjectData = (newProject:any)=> {
+        setTeamModalDialog(false);
+        setProjectData(newProject);
+    }
+
+    const showTeamListModal = ()=> {
+        setTeamModalDialog(true);
+        setAddToTeamDialog(false)
+        setTeamListDialog(true)
+    }
+
+    const showAddToTeamModal = ()=> {
+        setTeamModalDialog(true)
+        setTeamListDialog(false)
+        setAddToTeamDialog(true)
+
+        console.log(teamModalDialog, teamListDialog, addToTeamDialog)
+    }
 
 
     const clearTaskFromSource = (status:any, id:any)=> { 
@@ -324,10 +347,10 @@ export default function Board (props:any) {
                             
                             <div className={styles.team_action_wrapper}>
                                 <div className={styles.add_team_button_wrapper}>
-                                    <IconButton icon={MdOutlinePersonAddAlt} onclick={ ()=> setTeamModalDialog(true) } />
+                                    <IconButton icon={CgMenu} onclick={ ()=> showTeamListModal() } title="Open List" />
                                 </div>
                                 <div className={styles.add_team_button_wrapper}>
-                                    <IconButton icon={FaPlus} onclick={ ()=> setTeamModalDialog(true) } />
+                                    <IconButton icon={AiOutlineUsergroupAdd} onclick={ ()=> showAddToTeamModal() } title="Add Team" />
                                 </div>
                             </div>
                         </div>
@@ -341,7 +364,7 @@ export default function Board (props:any) {
                             <div className={styles.count}> { tasksTodo.length } </div>
                             
                             <div className={styles.create_task_button_wrapper} >
-                                <IconButton icon={FaPlus} onClick={ toggleCreateTaskDialog } />
+                                <IconButton icon={FaPlus} onclick={ toggleCreateTaskDialog } />
                             </div>
                         </div>
                         <div className={styles.body}>
@@ -472,7 +495,7 @@ export default function Board (props:any) {
             </div>
             
             { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId } closeModal={ toggleCreateTaskDialog } /> : null }
-            { (teamModalDialog) ? <TeamModal projectId={ router.query.projectId } closeModal={()=> setTeamModalDialog(false) } /> : null }
+            { (teamModalDialog) ? <TeamModal projectCreator={projectData.createdBy} listTeam={teamListDialog} addMem={addToTeamDialog} projectId={ router.query.projectId } members={ [...projectTeamList].reverse() } resetProject={(newProject:any)=> setNewProjectData(newProject) } closeModal={()=> setTeamModalDialog(false)}  /> : null  }
 
         </section>
     );

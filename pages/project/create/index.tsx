@@ -115,6 +115,7 @@ export default function Create(props:any) {
     }
 
     const createProject = ()=> {
+
         if(!validateTitle(titleModel)) {
             setTitleModel({...titleModel});
             return;

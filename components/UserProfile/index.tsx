@@ -1,9 +1,12 @@
 import styles from "./userprofile.module.css"
 import Image from "next/image";
+import { FaTrash } from "react-icons/fa";
+import IconButton from "../Buttons/IconButton";
+import { useSelector } from "react-redux";
 
 export default function UserProfile (props:any) {
 
-    const { showDetails, firstname, lastname, imageURL } = props;
+    const { projectCreator, showDetails, userId, firstname, lastname, email, imageURL, onUserDelete } = props;
 
     return (
         <div className={styles.container}>
@@ -22,7 +25,23 @@ export default function UserProfile (props:any) {
             }
             {
                 (showDetails) 
-                ? <div className={styles.username}>User Name</div>
+                ?   <div className={styles.user_details}>
+                        <div className={styles.username}>
+                            { firstname } { lastname }
+                        </div>
+                        <div className={styles.email}>
+                            ({ email })
+                        </div>
+                    </div>
+                : null
+            }
+            {
+                (showDetails)
+                ? (projectCreator !== userId)
+                    ?   <div className={styles.delete_user_icon}>
+                            <IconButton icon={ FaTrash } onclick={()=> onUserDelete(userId)} />
+                        </div>
+                    :   <div className={styles.delete_user_icon}>Me</div>
                 : null
             }
         </div>
