@@ -26,7 +26,6 @@ export default function AddTeamModal(props:any) {
     const [isBtnloading, setisBtnloading] = useState(false);
     const [isMemberSubmitted, setIsMemberSubmitted] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const [isError, setIsError] = useState(false);
 
     const setInput = (inputValue:any, model:any)=> {
         if(model.name === 'member-email') {
@@ -64,13 +63,12 @@ export default function AddTeamModal(props:any) {
 
             axios.post(`/api/v1/projects/${projectId}/updateteam`, payload, config)
             .then(({data})=> {
-                // props.addMemToTeam(data.projects);
                 setisBtnloading(false);
-                
                 setIsMemberSubmitted(true);
-
-                setIsError(false);
                 setIsSuccess(true);
+
+                console.log(data);
+                onSuccess(data.project);
             })
             .catch((error)=> {
                 setisBtnloading(false);
@@ -87,7 +85,6 @@ export default function AddTeamModal(props:any) {
                 setMemEmailModel({...memEmailModel});
 
                 setIsSuccess(false);
-                setIsError(true);
             });
         }
 

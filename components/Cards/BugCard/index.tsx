@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 export default function BugCard (props:any) {
 
-    const { id, taskId, title, desc, status, date, createdBy, comments, draggable, dragStart, dragEnd, deleteTask } = props;
+    const { id, taskId, title, desc, status, team, date, createdBy, comments, draggable, dragStart, dragEnd, deleteTask } = props;
     const [menuVisibility, setMenuVisibility] = useState(false);
     const [creator, setCreator]:any = useState({});
 
@@ -74,16 +74,16 @@ export default function BugCard (props:any) {
             <div className={styles.desc}> { desc } </div>
             
             <div className={styles.action}>
-                        { 
-                            (comments.length === 0) 
-                            ?   <div className={styles.no_comment}>No Comments</div>
-                            :   <div className={styles.comments}>
-                                    <BiCommentDetail className={styles.comment_icon} />
-                                    <div className={styles.digit}> { comments.length } </div>
-                                </div>
-                        } 
+                { 
+                    (comments.length === 0) 
+                    ?   <div className={styles.no_comment}> No Comments </div>
+                    :   <div className={styles.comments}>
+                            <BiCommentDetail className={styles.comment_icon} />
+                            <div className={styles.digit}> { comments.length } </div>
+                        </div>
+                } 
                 <div className={styles.teamlist_wrapper}>
-                    <MiniTeamList />
+                    <MiniTeamList team={team} />
                 </div>
             </div>
         </div>

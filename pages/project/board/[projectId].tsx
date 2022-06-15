@@ -13,6 +13,7 @@ import { CgMenu } from "react-icons/cg"
 import styles from "./board.module.css";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { resolve } from "path";
 
 export default function Board (props:any) {
 
@@ -49,7 +50,8 @@ export default function Board (props:any) {
 
     const setNewProjectData = (newProject:any)=> {
         setTeamModalDialog(false);
-        setProjectData(newProject);
+
+        getProjectTeamData(newProject.team)
     }
 
     const showTeamListModal = ()=> {
@@ -271,11 +273,15 @@ export default function Board (props:any) {
 
     const getProjectTeamData = (team:any)=> {
         return new Promise(async ()=> {
+            const teamMembers:any = [];
+            
             for await (var teamMem of team) {
                 axios.get(`/api/v1/users/${teamMem}`, config)
                 .then(({data})=> {
-                    projectTeamList.unshift(data.user);
-                    setProjectTeamList([...projectTeamList]);
+                    teamMembers.push(data.user);
+                    if(teamMem === team[team.length-1]) {
+                        setProjectTeamList(teamMembers);
+                    }
                 })
                 .catch((error)=> console.error(error))
             }
@@ -303,7 +309,7 @@ export default function Board (props:any) {
             .then(()=> {
                 getProjectDets()
                 .then((project:any)=> {
-                    getProjectTeamData(project.team);
+                    getProjectTeamData(project.team)
                     sortProjectTasks(project.tasks);
                 })
             })
@@ -343,7 +349,7 @@ export default function Board (props:any) {
                     <div className={styles.team_wrapper}>
                         <div className={styles.team_list_heading}>Team</div>
                         <div className={styles.list}>
-                            <TeamList team={[...projectTeamList].reverse()} />
+                            <TeamList team={projectTeamList.reverse()} />
                             
                             <div className={styles.team_action_wrapper}>
                                 <div className={styles.add_team_button_wrapper}>
