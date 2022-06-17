@@ -17,12 +17,10 @@ export default function TeamModal(props:any) {
     const deleteUserFromTeam = (userId:any)=> {
         const payload = { userId }
 
-        console.log(payload);
         axios.post(`/api/v1/projects/${projectId}/deleteteam`, payload, config)
         .then(({ data })=> {
             resetProject(data.project)
         })
-        .catch((error)=> console.log(error.response));
     }
 
     return (

@@ -67,13 +67,10 @@ export default function AddTeamModal(props:any) {
                 setIsMemberSubmitted(true);
                 setIsSuccess(true);
 
-                console.log(data);
                 onSuccess(data.project);
             })
             .catch((error)=> {
                 setisBtnloading(false);
-
-                console.log(error);
 
                 if(error.response.status === 404) {
                     memEmailModel.error = error.response.data.message;
@@ -96,12 +93,12 @@ export default function AddTeamModal(props:any) {
             {
                 (isMemberSubmitted) 
                 ?   (isSuccess)  ?  <div className={styles.success_dialog}>
-                                <div className={styles.heading}> <FaTimes className={styles.close_icon} onClick={()=> setIsMemberSubmitted(false)} /> </div>
-                                <div className={styles.icon}> <FaCheckCircle /> </div>
-                                <div className={styles.success_msg}>
-                                    New member has been added to team successfully.
-                                </div>
-                            </div>
+                                        <div className={styles.heading}> <FaTimes className={styles.close_icon} onClick={()=> setIsMemberSubmitted(false)} /> </div>
+                                        <div className={styles.icon}> <FaCheckCircle /> </div>
+                                        <div className={styles.success_msg}>
+                                            New member has been added to team successfully.
+                                        </div>
+                                    </div>
                         :   null
                 :   <div>
                         <div className={styles.heading}>Add New Team Member</div>

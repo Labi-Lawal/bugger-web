@@ -1,0 +1,113 @@
+.container {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    box-shadow: inset 0 0 0 2000px rgb(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px) saturate(100%) contrast(25%) brightness(130%);
+}
+.overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+    cursor: pointer; 
+}
+.detail_board {
+    height: 85%;
+    width: 50%;
+    margin: auto 0 auto auto;
+    background: white;
+
+    border-radius: 100px 0 0 100px;
+    padding: 2% 5%; 
+}
+
+.head { 
+    display: flex;
+}
+.head > div {
+    display: flex;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    color: rgb(85, 85, 85);
+}
+.label_icon {
+    font-size: 1em;
+}
+.label_text{
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.createdBy {
+    text-transform: capitalize;
+    margin-left: 10%;
+}
+.data {
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-left: 5px;
+    color: rgb(135, 135, 135);
+}
+.warning {
+    margin-left: 10%;
+    font-weight: 600;
+    color: rgb(135, 135, 135);
+}
+
+.body_wrapper {
+    margin-top: 5%;
+}
+.body_wrapper .label {
+    color: gray;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+.body_wrapper .title {
+    color: rgb(100, 100, 100);
+    font-weight: 600;
+    font-size: 2em;
+}
+.body_wrapper .desc {
+    color: rgb(128, 123, 123);
+    font-weight: 500;
+    margin-top: 5%;
+}
+.desc .label {
+    font-size:  0.8em;
+    border-bottom: 2px solid var(--orange-100);
+    word-wrap: none;
+    width: 30px;
+}
+.desc .content {
+    margin-top: 1%;
+    font-weight: 400;
+    color: var(100, 100, 100);
+}
+
+.new_comment {
+    height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.userprofile_wrapper {
+    width: min-content;
+    height: 50%;
+}
+.inputfield_wrapper {
+    width: 80%;
+    height: 100%;
+}
+.comment_btn_wrapper {
+    height: 40%;
+    width: 10%;
+}
+.comment_btn_wrapper button {
+    font-size: 0.9em;
+}

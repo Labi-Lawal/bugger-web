@@ -1,7 +1,7 @@
 import { createRef, RefObject, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SideBar from "../../../components/SideBar";
-import BugCard from "../../../components/Cards/BugCard"
+import BugCard from "../../../components/Cards/TaskCard"
 import { TeamList } from "../../../components/Lists/TeamList";
 import TextButton from "../../../components/Buttons/TextButton";
 import CreateTask from "../../../components/Modals/CreateTask";
@@ -14,6 +14,7 @@ import styles from "./board.module.css";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { resolve } from "path";
+import TaskBoard from "../../../components/TaskBoard";
 
 export default function Board (props:any) {
 
@@ -33,6 +34,9 @@ export default function Board (props:any) {
     const [teamModalDialog, setTeamModalDialog] = useState(false);
     const [teamListDialog, setTeamListDialog] = useState(false);
     const [addToTeamDialog, setAddToTeamDialog] = useState(false);
+    
+    const [taskBoardToggle, setTaskBoardToggle] = useState(false);
+    const [currentTask, setCurrentTask] = useState({});
 
     const [ createTaskDialog, setDialog ] = useState(false),
     toggleCreateTaskDialog = ()=> setDialog(!createTaskDialog),
@@ -48,9 +52,13 @@ export default function Board (props:any) {
     [taskItem, setTaskItem] = useState<any>({}),
     [taskItemMeta, setTaskItemMeta] = useState({ status:'', id:'' });
 
+    const openTaskBoard = (task:any)=> {
+        setCurrentTask({...task});
+        setTaskBoardToggle(true);   
+    }
+
     const setNewProjectData = (newProject:any)=> {
         setTeamModalDialog(false);
-
         getProjectTeamData(newProject.team)
     }
 
@@ -64,8 +72,6 @@ export default function Board (props:any) {
         setTeamModalDialog(true)
         setTeamListDialog(false)
         setAddToTeamDialog(true)
-
-        console.log(teamModalDialog, teamListDialog, addToTeamDialog)
     }
 
 
@@ -393,6 +399,7 @@ export default function Board (props:any) {
                                                     draggable={true}
                                                     dragStart={saveTaskItem}
                                                     dragEnd={dragTaskTo}
+                                                    openTask={ ()=> openTaskBoard(task) }
                                                 />
                                             </div>
                                 })
@@ -425,6 +432,7 @@ export default function Board (props:any) {
                                                    draggable={true}
                                                    dragStart={saveTaskItem}
                                                    dragEnd={dragTaskTo}
+                                                   openTask={ ()=> openTaskBoard(task) }
                                                 />
                                             </div>
                                 })
@@ -457,6 +465,7 @@ export default function Board (props:any) {
                                                     draggable={true}
                                                     dragStart={saveTaskItem}
                                                     dragEnd={dragTaskTo}
+                                                    openTask={ ()=> openTaskBoard(task) }
                                                 />
                                             </div>
                                 })
@@ -490,7 +499,7 @@ export default function Board (props:any) {
                                                    draggable={true}
                                                    dragStart={saveTaskItem}
                                                    dragEnd={dragTaskTo}
-                                                   deleteTask={(id:any)=> deleteTaskFromDB(id)}
+                                                   openTask={ ()=> openTaskBoard(task) }
                                                 />
                                             </div>
                                 })
@@ -501,8 +510,8 @@ export default function Board (props:any) {
             </div>
             
             { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId } closeModal={ toggleCreateTaskDialog } /> : null }
-            { (teamModalDialog) ? <TeamModal projectCreator={projectData.createdBy} listTeam={teamListDialog} addMem={addToTeamDialog} projectId={ router.query.projectId } members={ [...projectTeamList].reverse() } resetProject={(newProject:any)=> setNewProjectData(newProject) } closeModal={()=> setTeamModalDialog(false)}  /> : null  }
-
+            { (teamModalDialog) ? <TeamModal projectCreator={projectData.createdBy} listTeam={teamListDialog} addMem={addToTeamDialog} projectId={ router.query.projectId } members={ [...projectTeamList] } resetProject={(newProject:any)=> setNewProjectData(newProject) } closeModal={()=> setTeamModalDialog(false)}  /> : null  }
+            { (taskBoardToggle) ? <TaskBoard taskData={currentTask} projectData={projectData} closeBoard={ ()=> setTaskBoardToggle(false) } /> :null }
         </section>
     );
 }

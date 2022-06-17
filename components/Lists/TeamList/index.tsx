@@ -27,6 +27,8 @@ const MiniTeamList = (props:any)=> {
 
     const { team } = props;
 
+    console.log(team);
+
     return (
         <div className={styles.container}>
         {   

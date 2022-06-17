@@ -16,6 +16,7 @@
 .title {
     font-weight: 600;
     color: var(--grey-text);
+    cursor: pointer;
 }
 .menu {
     font-size: 120%;
@@ -48,6 +49,10 @@
 }
 .menu_container > div:hover {
     background: var(--grey-background-faded);
+}
+
+.info_wrapper {
+    cursor: pointer;
 }
 .meta_info {
     font-size: 80%;
