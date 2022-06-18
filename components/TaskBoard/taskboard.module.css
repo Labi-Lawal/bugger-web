@@ -19,7 +19,7 @@
     margin: auto 0 auto auto;
     background: white;
 
-    border-radius: 100px 0 0 100px;
+    border-radius: 20px 0 0 20px;
     padding: 2% 5%; 
 }
 
@@ -90,7 +90,7 @@
 }
 
 .new_comment {
-    height: 100px;
+    height: 70px;
 
     display: flex;
     align-items: center;
@@ -110,4 +110,6 @@
 }
 .comment_btn_wrapper button {
     font-size: 0.9em;
+    color: var(--orange-100);
+    background-color: var(--orange-background-faded);
 }

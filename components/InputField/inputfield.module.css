@@ -16,6 +16,9 @@
     color: rgb(20, 20, 20);
     font-weight: 500;
 }
+.no_label_input {
+    height: 70%;
+}
 .label {
     text-transform: capitalize;
     height: 30px;

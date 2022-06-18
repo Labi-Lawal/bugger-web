@@ -1,11 +1,13 @@
 import { current } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getRequestMeta } from "next/dist/server/request-meta";
 import { resolve } from "node:path/win32";
 import { useEffect, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { MdCalendarToday, MdCalendarViewDay, MdCalendarViewMonth, MdOutlineCalendarToday, MdWarning } from "react-icons/md";
 import { useSelector } from "react-redux";
 import TextButton from "../Buttons/TextButton";
+import CommentCard from "../Cards/CommentCard";
 import InputField from "../InputField";
 import { MiniTeamList, TeamList } from "../Lists/TeamList";
 import UserProfile from "../UserProfile";
@@ -36,15 +38,18 @@ export default function BugDetailBoard(props:any) {
 
     const setInput = (inputItem:any, model:any)=> {
         model.value = inputItem;
+        validateComment(model);
+        setNewCommentModel({...model});
+    }
 
-        if(model.value === '') { 
-            model.error = 'Field cannot be empty'
-            setNewCommentModel({...model});
+    const validateComment = (model:any)=> {
+        if(model.value === '') {
+            model.error = 'Field cannot be empty';
             return false;
         }
 
-        model.error = ""
-        setNewCommentModel({...model});
+        model.error = "";
+        return true;
     }
 
     const getCreatorDets = (userId:any)=> {
@@ -103,6 +108,16 @@ export default function BugDetailBoard(props:any) {
         });
     }, [])
 
+    const submitComment = ()=> {
+        if(!validateComment) {
+            setNewCommentModel(newCommentModel);
+        }
+
+        const payload = { comment: newCommentModel.value }
+
+        axios.post(`/api/v1/projects/${projectData._id}l`);
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.overlay} onClick={()=> closeBoard()}>
@@ -158,8 +173,22 @@ export default function BugDetailBoard(props:any) {
                                     />
                                 </div>
                                 <div className={styles.comment_btn_wrapper}>
-                                    <TextButton label="SEND" />
+                                    <TextButton label="SEND" onclick={()=> submitComment()} />
                                 </div>
+                            </div>
+                            <div className={styles.all_comments}>
+                                {
+                                    (taskData.comments.length > 0) 
+                                    ?   taskData.comments.forEach(async (comment:any)=> {
+                                            await axios.get(`/api/v1/users/${comment.user}`, config)
+                                            .then((user)=> {
+                                                <div className={styles.comment_card_wrapper}>
+                                                    <CommentCard userInfo={user} />
+                                                </div>
+                                            });
+                                        })
+                                    : null
+                                }
                             </div>
                         </div>
                     </div>

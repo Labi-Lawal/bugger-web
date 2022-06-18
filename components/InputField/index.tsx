@@ -6,8 +6,17 @@ export default function InputField(props:any) {
 
     return(
         <div className={styles.input_field}>
-            <label className={styles.label}> { label } </label>
-            <input type={type} className={styles.input} placeholder={hint} onInput={ (e:any)=> onKeyPress(e.target.value) } />
+            {
+                (label) 
+                ? <label className={styles.label}> { label } </label>
+                : null
+            }
+            <input 
+                type={type}
+                className={`${styles.input} ${(!label) ? styles.no_label_input :null}`}
+                placeholder={hint}
+                onInput={ (e:any)=> onKeyPress(e.target.value) }
+            />
             <div className={styles.error}> { error } </div>
         </div>
     );
