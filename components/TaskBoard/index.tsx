@@ -1,11 +1,12 @@
-import { current } from "@reduxjs/toolkit";
 import axios from "axios";
 import { getRequestMeta } from "next/dist/server/request-meta";
 import { resolve } from "node:path/win32";
 import { useEffect, useState } from "react";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { MdCalendarToday, MdCalendarViewDay, MdCalendarViewMonth, MdOutlineCalendarToday, MdWarning } from "react-icons/md";
 import { useSelector } from "react-redux";
+import IconButton from "../Buttons/IconButton";
 import TextButton from "../Buttons/TextButton";
 import CommentCard from "../Cards/CommentCard";
 import InputField from "../InputField";
@@ -134,6 +135,11 @@ export default function BugDetailBoard(props:any) {
         });
     }
 
+    const showAddToTeamModal = ()=> {
+        
+    }
+    
+
     return (
         <div className={styles.container}>
             <div className={styles.overlay} onClick={()=> closeBoard()}>
@@ -156,7 +162,13 @@ export default function BugDetailBoard(props:any) {
                                     <TeamList team={teamList} />
                                 </div>
                             </div>
-                        :   <div className={styles.warning}> <MdWarning /> No Team Assigned</div>
+                        :   <div className={styles.warning}> 
+                                <MdWarning /> 
+                                No Team Assigned  
+                                <div className={styles.add_member_task_wrapper}>
+                                    <IconButton icon={AiOutlineUsergroupAdd} onclick={ ()=> showAddToTeamModal() } />
+                                </div>
+                            </div>
                     }
                     <div></div>
                 </div>

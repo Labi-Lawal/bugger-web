@@ -56,8 +56,20 @@
 }
 .warning {
     margin-left: 10%;
-    font-weight: 600;
-    color: rgb(135, 135, 135);
+    font-size: 0.9em;
+    font-weight: 400;
+    color: rgb(155, 155, 155);
+
+    display: flex;
+    align-items: center;
+}
+.add_member_task_wrapper {
+    margin-left: 10px;
+}
+.add_member_task_wrapper button {
+    background: var(--grey-background-faded);
+    color: grey;
+    border-radius: 5px;
 }
 
 .body_wrapper {
@@ -114,3 +126,5 @@
     color: var(--orange-100);
     background-color: var(--orange-background-faded);
 }
+
+/*  */
