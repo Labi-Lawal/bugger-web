@@ -28,6 +28,7 @@ export default function BugDetailBoard(props:any) {
     const [creatorFullname, setCreatorFullName] = useState('');
     const [teamList, setTeamList]:any = useState([]);
     const [currentUser, setCurrentUser]:any = useState({});
+    const [allComments, setAllComments]:any = useState({});
     const [newCommentModel, setNewCommentModel] = useState({
         type: 'text',
         label: '',
@@ -35,6 +36,7 @@ export default function BugDetailBoard(props:any) {
         value: '',
         error: ''
     });
+    const [isBtnLoading, setIsBtnLoading] = useState(false);
 
     const setInput = (inputItem:any, model:any)=> {
         model.value = inputItem;
@@ -100,6 +102,7 @@ export default function BugDetailBoard(props:any) {
     }
 
     useEffect(()=> {
+        setAllComments(taskData.comments);
         getCreatorDets(projectData.createdBy)
         .then((user:any)=> {
             setCreatorFullName(`${user.firstname} ${user.lastname}`);
@@ -109,13 +112,26 @@ export default function BugDetailBoard(props:any) {
     }, [])
 
     const submitComment = ()=> {
-        if(!validateComment) {
-            setNewCommentModel(newCommentModel);
+        if(!validateComment(newCommentModel)) {
+            setNewCommentModel({...newCommentModel});
+            return;
         }
 
-        const payload = { comment: newCommentModel.value }
+        const payload = { 
+            taskId: taskData._id,
+            comment: newCommentModel.value 
+        }
 
-        axios.post(`/api/v1/projects/${projectData._id}l`);
+        setIsBtnLoading(true);
+
+        axios.post(`/api/v1/projects/${projectData._id}/updatetaskcomment`, payload, config)
+        .then(({data})=> {
+            setIsBtnLoading(false);
+            setAllComments(data.updatedTask.comments);
+        })
+        .catch((error)=> {
+            console.log(error)
+        });
     }
 
     return (
@@ -148,16 +164,14 @@ export default function BugDetailBoard(props:any) {
                 <div className={styles.body_wrapper}>
                     <div className={styles.title}> { taskData.title } </div>
                     
-                    <div className={styles.desc}> 
-                        <div className={styles.label}>Description</div>
-                        <div className={styles.content}> { taskData.desc } </div>
-                    </div>
+                    <div className={styles.content}> { taskData.desc } </div>
 
                     <div className={styles.desc}> 
                         <div className={styles.label}>Comments</div>
                         <div className={styles.comment_section}> 
                             <div className={styles.new_comment}>
-                                { (currentUser.firstname) 
+                                { 
+                                    (currentUser.firstname) 
                                     ?   <div className={styles.userprofile_wrapper}>
                                             <UserProfile firstname={currentUser.firstname} lastname={currentUser.lastname} /> 
                                         </div>
@@ -173,19 +187,20 @@ export default function BugDetailBoard(props:any) {
                                     />
                                 </div>
                                 <div className={styles.comment_btn_wrapper}>
-                                    <TextButton label="SEND" onclick={()=> submitComment()} />
+                                    <TextButton 
+                                        label="SEND"
+                                        loading={isBtnLoading}
+                                        onclick={()=> submitComment()} 
+                                    />
                                 </div>
                             </div>
                             <div className={styles.all_comments}>
                                 {
-                                    (taskData.comments.length > 0) 
-                                    ?   taskData.comments.forEach(async (comment:any)=> {
-                                            await axios.get(`/api/v1/users/${comment.user}`, config)
-                                            .then((user)=> {
-                                                <div className={styles.comment_card_wrapper}>
-                                                    <CommentCard userInfo={user} />
-                                                </div>
-                                            });
+                                    (allComments.length > 0) 
+                                    ?   allComments.map((comment:any, count:any)=> {
+                                            return  <div className={styles.comment_card_wrapper} key={count}>
+                                                        <CommentCard userId={comment.createdBy} date={comment.dateCreated} comment={comment.content} />
+                                                    </div>
                                         })
                                     : null
                                 }

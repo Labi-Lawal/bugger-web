@@ -1,9 +1,16 @@
 .container {
-    border: 1px solid black;
+    padding: 1%;
 }
-
-
-
-/* created a new utils function called detDate() to convert date format from numeric to text */
-/* created the comment card component */
-/* finished styling the new comment section, added a resize condition for the input tag in input field */
+.meta_data {
+    display: flex;
+    align-items: center;
+}
+.userprofile_wrapper {
+    width: 80%;
+}
+.date {
+    width: 20%;
+}
+.comment {
+    margin-left: 7%;
+}

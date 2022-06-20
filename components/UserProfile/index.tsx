@@ -29,14 +29,19 @@ export default function UserProfile (props:any) {
                         <div className={styles.username}>
                             { firstname } { lastname }
                         </div>
-                        <div className={styles.email}>
-                            ({ email })
-                        </div>
+                        
+                        {
+                            (email) 
+                            ?   <div className={styles.email}>
+                                    ({ email })
+                                </div>
+                            :null
+                        }
                     </div>
                 : null
             }
             {
-                (showDetails)
+                (showDetails && email)
                 ? (projectCreator !== userId)
                     ?   <div className={styles.delete_user_icon}>
                             <IconButton icon={ FaTrash } onclick={()=> onUserDelete(userId)} />
