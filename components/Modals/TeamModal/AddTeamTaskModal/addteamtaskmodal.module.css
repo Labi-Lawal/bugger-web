@@ -1,0 +1,32 @@
+.container {
+    margin: 0 auto;
+}
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--grey-line);
+    padding: 3% 0;
+    font-weight: 600;
+    font-size: 1.2em;
+}
+.user_search_field_wrapper {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border: 1px solid var(--grey-line);
+    overflow: hidden;
+    border-radius: 5px;
+    margin-top: 5%;
+}
+.search_icon {
+    width: 10%;
+    color: var(--grey-heading-text);
+}
+.user_search_field_wrapper input {
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 80%;
+    font-size: 1em;
+}

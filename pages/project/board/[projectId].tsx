@@ -74,7 +74,6 @@ export default function Board (props:any) {
         setAddToTeamDialog(true)
     }
 
-
     const clearTaskFromSource = (status:any, id:any)=> { 
         if(status === 'todo') {
             const updatedTasksTodo = [...tasksTodo];
@@ -277,21 +276,17 @@ export default function Board (props:any) {
         })
     }
 
-    const getProjectTeamData = (team:any)=> {
-        return new Promise(async ()=> {
-            const teamMembers:any = [];
-            
-            for await (var teamMem of team) {
-                axios.get(`/api/v1/users/${teamMem}`, config)
-                .then(({data})=> {
-                    teamMembers.push(data.user);
-                    if(teamMem === team[team.length-1]) {
-                        setProjectTeamList(teamMembers);
-                    }
-                })
-                .catch((error)=> console.error(error))
-            }
-        })
+    const getProjectTeamData = async (team:any)=> {
+        projectTeamList.splice(0, projectTeamList.length)
+
+        for(var i=0; i<team.length; i++) {
+            await axios.get(`/api/v1/users/${team[i]}`, config)
+            .then(({ data })=> {
+                console.log(team[i], data.user);
+                projectTeamList.push(data.user);
+                if(team[i] === team[team.length-1]) setProjectTeamList([...projectTeamList])
+            })
+        }
     }
 
     const deleteTaskFromDB = (taskId:any)=> {
@@ -306,7 +301,7 @@ export default function Board (props:any) {
         });
     }
 
-    useEffect(()=> {
+    useEffect(()=> { 
         if(!router.isReady) return;
 
         getUserData()
@@ -314,8 +309,8 @@ export default function Board (props:any) {
             getAllProjectDets(projects)
             .then(()=> {
                 getProjectDets()
-                .then((project:any)=> {
-                    getProjectTeamData(project.team)
+                .then(async (project:any)=> {
+                    await getProjectTeamData(project.team)
                     sortProjectTasks(project.tasks);
                 })
             })
@@ -355,7 +350,7 @@ export default function Board (props:any) {
                     <div className={styles.team_wrapper}>
                         <div className={styles.team_list_heading}>Team</div>
                         <div className={styles.list}>
-                            <TeamList team={projectTeamList.reverse()} />
+                            <TeamList team={projectTeamList} />
                             
                             <div className={styles.team_action_wrapper}>
                                 <div className={styles.add_team_button_wrapper}>
@@ -511,7 +506,7 @@ export default function Board (props:any) {
             
             { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId } closeModal={ toggleCreateTaskDialog } /> : null }
             { (teamModalDialog) ? <TeamModal projectCreator={projectData.createdBy} listTeam={teamListDialog} addMem={addToTeamDialog} projectId={ router.query.projectId } members={ [...projectTeamList] } resetProject={(newProject:any)=> setNewProjectData(newProject) } closeModal={()=> setTeamModalDialog(false)}  /> : null  }
-            { (taskBoardToggle) ? <TaskBoard taskData={currentTask} projectData={projectData} closeBoard={ ()=> setTaskBoardToggle(false) } /> :null }
+            { (taskBoardToggle) ? <TaskBoard taskData={currentTask} projectData={projectData} projectTeamList={[...projectTeamList]} closeBoard={ ()=> setTaskBoardToggle(false) } /> :null }
         </section>
     );
 }

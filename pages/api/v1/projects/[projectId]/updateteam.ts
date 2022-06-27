@@ -14,6 +14,7 @@ export default validateToken((req:Request, res:NextApiResponse)=> {
 
         ProjectModel.findOne({id: projectId})
         .then((foundProject)=> {
+
             if(foundProject.team.includes(foundUser.id)) return res.status(409).send({ message: 'User already a member' });
             
             ProjectModel.findOneAndUpdate(
