@@ -1,12 +1,9 @@
-import { useEffect } from "react";
 import UserProfile from "../../UserProfile";
 import styles from "./teamlist.module.css";
 
 const TeamList = (props:any)=> {
 
     const { team } = props;
-
-    console.log(team);
 
     return (
         <div className={styles.container}>

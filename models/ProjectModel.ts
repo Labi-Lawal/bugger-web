@@ -5,6 +5,7 @@ export default models.projects || model('projects', new Schema({
     desc: String,
     createdBy: String,
     team: Array,
+    status: { type: String, default: 'ongoing' },
     tasks: [{
         title: String,
         desc: String,

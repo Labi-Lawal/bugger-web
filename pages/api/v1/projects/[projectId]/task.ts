@@ -12,7 +12,6 @@ export default validateToken(function Task(req:Request, res:NextApiResponse) {
         desc: req.body.desc,
         createdBy: req.user._id
     }
-    console.log(newTask);
 
     ProjectModel.findOneAndUpdate(
         { id: req.query.projectId },

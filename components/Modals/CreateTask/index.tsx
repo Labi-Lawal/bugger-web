@@ -8,7 +8,7 @@ import axios from "axios";
 
 export default function createTask(props:any) {
 
-    const { projectId } = props;
+    const { projectId, updateProjectData } = props;
 
     const userState = useSelector((state:any)=> state.user);
 
@@ -21,7 +21,7 @@ export default function createTask(props:any) {
         name: 'project-title',
         value:'',
         error:'', 
-        label:'Project Title',
+        label:'Task Title',
         hint: ''
     }),
     [projectDescModel, setProjectDescModel] = useState({
@@ -75,8 +75,6 @@ export default function createTask(props:any) {
 
     const createProjectTask = ()=> {
 
-        console.log(userState);
-
         if(!validateProjectTitle(projectTitleModel)) {
             setProjectTitleModel({...projectTitleModel});
             return;
@@ -89,12 +87,10 @@ export default function createTask(props:any) {
 
         setIsBtnLoading(true);
 
-        console.log(payload);
-
         axios.put(`/api/v1/projects/${projectId}/task`, payload, config)
-        .then((response)=> { 
+        .then(({data})=> { 
             setIsBtnLoading(false);
-            console.log(response.data);
+            updateProjectData(data.project);
         })
         .catch((error)=> {
             setIsBtnLoading(false);

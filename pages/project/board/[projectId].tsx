@@ -1,5 +1,5 @@
 import { createRef, RefObject, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import SideBar from "../../../components/SideBar";
 import BugCard from "../../../components/Cards/TaskCard"
 import { TeamList } from "../../../components/Lists/TeamList";
@@ -13,8 +13,9 @@ import { CgMenu } from "react-icons/cg"
 import styles from "./board.module.css";
 import { useRouter } from "next/router";
 import axios from "axios";
-import { resolve } from "path";
 import TaskBoard from "../../../components/TaskBoard";
+import SwingingDotsLoader from "../../../components/Loader/SwingingDotsLoader";
+import CircularProgressLoader from "../../../components/Loader/CircularProgressLoader";
 
 export default function Board (props:any) {
 
@@ -28,6 +29,8 @@ export default function Board (props:any) {
         team: [],
         createdBy: ''
     });
+    const [isProjStatLoading, setIsProjStatLoading] = useState(false);
+
     const [projectTeamList, setProjectTeamList]:any = useState([]);
     const [sideBarNav, setSideBarNav]:any = useState([]);
 
@@ -45,10 +48,10 @@ export default function Board (props:any) {
     inReviewColumnRef: RefObject<HTMLDivElement> = createRef(),
     completedColumnRef: RefObject<HTMLDivElement> = createRef();
 
-    const [tasksTodo, setToDo] = useState([]),
-    [tasksInProgress, setProgress] = useState([]),
-    [tasksInReview, setReview] = useState([]),
-    [tasksCompleted, setCompleted] = useState([]),
+    const [tasksTodo, setToDo]:any = useState([]),
+    [tasksInProgress, setProgress]:any = useState([]),
+    [tasksInReview, setReview]:any = useState([]),
+    [tasksCompleted, setCompleted]:any = useState([]),
     [taskItem, setTaskItem] = useState<any>({}),
     [taskItemMeta, setTaskItemMeta] = useState({ status:'', id:'' });
 
@@ -202,9 +205,14 @@ export default function Board (props:any) {
     const updateTaskItemInDB = (taskItem:any)=> {
         const payload = taskItem;
 
+        setIsProjStatLoading(true);
         axios.patch(`/api/v1/projects/${router.query.projectId}/updatetask`, payload, config)
-        .then(({ data })=> {})
-        .catch((error)=> {});
+        .then(({ data })=> { 
+            console.log(data)
+            setProjectData({...data.project});
+            setIsProjStatLoading(false);
+        })
+        .catch((error)=> setIsProjStatLoading(false));
     }
 
     // GET USER DATA
@@ -251,29 +259,35 @@ export default function Board (props:any) {
 
     const sortProjectTasks = (tasks:any)=> {
         return new Promise(async ()=> {
-            for await (var task of tasks) {
+            setToDo([...tasksTodo.splice(0, tasksTodo.length)]);
+            setProgress([...tasksInProgress.splice(0, tasksInProgress.length)]);
+            setReview([...tasksInReview.splice(0, tasksTodo.length)]);
+            setCompleted([...tasksCompleted.splice(0, tasksTodo.length)]);
+
+            tasks.forEach((task:any)=> {
                 if(task.status === 'todo') {
-                    const newTask:any = [...tasksTodo];
-                    newTask.unshift(task);
-                    setToDo(newTask);
+                    if(!tasksTodo.includes(task)) tasksTodo.unshift(task);
+                    setToDo([...tasksTodo]);
                 }
                 if(task.status === 'in-progress') {
-                    const newTask:any = [...tasksInProgress];
-                    newTask.unshift(task);
-                    setProgress(newTask);
+                    if(!tasksTodo.includes(task)) tasksInProgress.unshift(task);
+                    setProgress([...tasksInProgress]);
                 }
                 if(task.status === 'in-review') {
-                    const newTask:any = [...tasksInReview];
-                    newTask.unshift(task);
-                    setReview(newTask);
+                    if(!tasksTodo.includes(task)) tasksInReview.unshift(task);
+                    setReview([...tasksInReview]);
                 }
                 if(task.status === 'completed') {
-                    const newTask:any = [...tasksCompleted];
-                    newTask.unshift(task);
-                    setCompleted(newTask);
+                    if(!tasksTodo.includes(task)) tasksCompleted.unshift(task);
+                    setCompleted([...tasksCompleted]);
                 }
-            }
+            });
         })
+    }
+
+    const setNewProjectTasks = (tasks:any)=> {
+        sortProjectTasks(tasks);
+        toggleCreateTaskDialog();
     }
 
     const getProjectTeamData = async (team:any)=> {
@@ -281,9 +295,8 @@ export default function Board (props:any) {
 
         for(var i=0; i<team.length; i++) {
             await axios.get(`/api/v1/users/${team[i]}`, config)
-            .then(({ data })=> {
-                console.log(team[i], data.user);
-                projectTeamList.push(data.user);
+            .then(({ data })=> {    
+                if(!projectTeamList.includes(data.user)) projectTeamList.push(data.user);
                 if(team[i] === team[team.length-1]) setProjectTeamList([...projectTeamList])
             })
         }
@@ -329,17 +342,21 @@ export default function Board (props:any) {
             <div className={styles.board_body}>
                 <div className={styles.project_head}> 
                     <div className={styles.project_title}> 
-                        {
-                            (projectData.status === 'ongoing')  ?
-                                <div className={styles.status}>
-                                    <div className={styles.ongoing_icon}></div>
-                                    <div className={styles.label}>Ongoing</div>
+                        {   
+                            (isProjStatLoading) 
+                            ?   <div className={styles.loader}>
+                                    <CircularProgressLoader />
                                 </div>
-                                :
-                                <div className={styles.status}>
-                                    <FaCheck className={styles.completed_icon} />
-                                    <div className={styles.label}>Completed</div>
-                                </div>
+                            :   (projectData.status === 'ongoing')  ?
+                                    <div className={styles.status}>
+                                        <div className={styles.ongoing_icon}></div>
+                                        <div className={styles.label}>Ongoing</div>
+                                    </div>
+                                    :
+                                    <div className={styles.status}>
+                                        <FaCheck className={styles.completed_icon} />
+                                        <div className={styles.label}>Completed</div>
+                                    </div>
                         }
                         <div className={styles.title}> { projectData.title } </div>
                     </div>
@@ -376,10 +393,10 @@ export default function Board (props:any) {
                         </div>
                         <div className={styles.body}>
                             {
-                                tasksTodo.map((task:any, index)=> {
+                                tasksTodo.map((task:any, index:number)=> {
                                     return  <div
                                                 className={styles.bugcard_wrapper}
-                                                key={index}
+                                                key={task._id}
                                             >
                                                 <BugCard
                                                     id={index} 
@@ -410,10 +427,10 @@ export default function Board (props:any) {
                         </div>
                          <div className={styles.body} >
                             {
-                                tasksInProgress.map((task:any, index)=> {
+                                tasksInProgress.map((task:any, index:number)=> {
                                     return  <div
                                                 className={styles.bugcard_wrapper}
-                                                key={index}
+                                                key={task._id}
                                             >
                                                 <BugCard
                                                    id={index} 
@@ -446,7 +463,7 @@ export default function Board (props:any) {
                                 tasksInReview.map((task:any, index:number)=> {
                                     return  <div
                                                 className={styles.bugcard_wrapper}
-                                                key={index}
+                                                key={task._id}
                                             >
                                                 <BugCard
                                                     id={index} 
@@ -476,10 +493,10 @@ export default function Board (props:any) {
                         </div>
                         <div className={styles.body}>
                             {
-                                tasksCompleted.map((task:any, index)=> {
+                                tasksCompleted.map((task:any, index:number)=> {
                                     return  <div
                                                 className={styles.bugcard_wrapper}
-                                                key={index}
+                                                key={task._id}
                                             >
                                                 <BugCard
                                                    id={index}
@@ -504,7 +521,7 @@ export default function Board (props:any) {
                 </div>
             </div>
             
-            { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId } closeModal={ toggleCreateTaskDialog } /> : null }
+            { (createTaskDialog) ? <CreateTask projectId={ router.query.projectId } updateProjectData={(newData:any)=> setNewProjectTasks(newData.tasks) } closeModal={ toggleCreateTaskDialog } /> : null }
             { (teamModalDialog) ? <TeamModal projectCreator={projectData.createdBy} listTeam={teamListDialog} addMem={addToTeamDialog} projectId={ router.query.projectId } members={ [...projectTeamList] } resetProject={(newProject:any)=> setNewProjectData(newProject) } closeModal={()=> setTeamModalDialog(false)}  /> : null  }
             { (taskBoardToggle) ? <TaskBoard taskData={currentTask} projectData={projectData} projectTeamList={[...projectTeamList]} closeBoard={ ()=> setTaskBoardToggle(false) } /> :null }
         </section>
